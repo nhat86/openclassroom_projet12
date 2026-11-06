@@ -48,3 +48,6 @@ yarn-error.log*
 
 # OS
 Thumbs.db
+dataset.csv
+*.pkl
+metrics.json
