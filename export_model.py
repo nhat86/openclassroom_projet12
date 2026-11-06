@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import pickle
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, f1_score, classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -53,7 +53,7 @@ def main():
             max_features=20000,
             sublinear_tf=True,
         )),
-        ("classifier", LogisticRegression(
+        ("classifier", LinearSVC(
             max_iter=1000,
             class_weight="balanced",
         )),
@@ -70,7 +70,7 @@ def main():
         pickle.dump(model, f)
 
     metrics = {
-        "model": "TfidfVectorizer + LogisticRegression",
+        "model": "TfidfVectorizer + LinearSVC",
         "exported_at": datetime.now(timezone.utc).isoformat(),
         "dataset": DATASET_PATH,
         "n_train": len(X_train),
