@@ -1,0 +1,41 @@
+name: Export model
+
+on:
+  release:
+    types: [created]         
+  workflow_dispatch:         
+    inputs:
+      tag_name:
+        description: "Tag của release test"
+        required: true
+        default: "v0.0.1-test"
+
+permissions:
+  contents: write             
+
+jobs:
+  export-model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Train and export model
+        env:
+          DATASET_PATH: dataset_sample.csv
+        run: python export_model.py
+
+      - name: Upload assets to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
+          files: |
+            model.pkl
+            metrics.json
