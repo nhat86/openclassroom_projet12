@@ -10,7 +10,7 @@
     "lint": "next lint",
     "db:start": "docker-compose up -d",
     "db:stop": "docker-compose down",
-    "db:reset": "node src/database/seed.js"
+    "db:reset": "node --env-file-if-exists=.env.local src/database/seed.js"
   },
   "dependencies": {
     "next": "15.4.5",
