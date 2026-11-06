@@ -29,3 +29,15 @@ export async function updateClaimTag(claimId: number, tag: string): Promise<void
     throw new Error('Failed to update tag');
   }
 }
+
+export async function autoTagClaim(claimId: number): Promise<{ tag: string }> {
+  const response = await fetch(`${BASE_URL}/${claimId}/tag-predict`, {
+    method: 'POST',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to auto-tag claim');
+  }
+
+  return response.json();
+}

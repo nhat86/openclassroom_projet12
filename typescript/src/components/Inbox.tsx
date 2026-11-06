@@ -11,9 +11,10 @@ interface InboxProps {
   claims: Claim[];
   loading: boolean;
   onTagClick?: (tag: string) => void;
+  onTagUpdate?: (claimId: number, tag: string) => void; 
 }
 
-export default function Inbox({ inboxId, onSelectClaim, selectedClaimId, claims, loading, onTagClick }: InboxProps) {
+export default function Inbox({ inboxId, onSelectClaim, selectedClaimId, claims, loading, onTagClick, onTagUpdate }: InboxProps) {
 
   const getInboxTitle = () => {
     if (inboxId === 'all') return 'All Claims';
@@ -48,6 +49,7 @@ export default function Inbox({ inboxId, onSelectClaim, selectedClaimId, claims,
               isSelected={selectedClaimId === claim.id}
               onClick={() => onSelectClaim(claim)}
               onTagClick={onTagClick}
+              onTagUpdate={onTagUpdate}
             />
           ))
         )}

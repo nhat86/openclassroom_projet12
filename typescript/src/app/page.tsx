@@ -88,6 +88,7 @@ export default function Home() {
             claims={claims}
             loading={loading}
             onTagClick={handleTagClick}
+            onTagUpdate={handleTagUpdate}
           />
         </section>
 

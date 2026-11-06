@@ -86,3 +86,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-weight: 700;
 }
+.autoTagButton {
+  composes: tag;
+  background: var(--foreground-muted);
+  margin-left: 0;
+}
+
+.autoTagButton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}

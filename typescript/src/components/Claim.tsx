@@ -2,15 +2,18 @@
 
 import styles from './Claim.module.css';
 import { Claim } from '@/database/queries.ts';
-
+import { useState } from 'react';
+import {autoTagClaim} from '@/api-client.ts';
 interface ClaimProps {
   claim: Claim;
   isSelected: boolean;
   onClick: () => void;
   onTagClick?: (tag: string) => void;
+  onTagUpdate?: (claimId: number, tag: string) => void;
 }
 
-export default function ClaimComponent({ claim, isSelected, onClick, onTagClick }: ClaimProps) {
+export default function ClaimComponent({ claim, isSelected, onClick, onTagClick, onTagUpdate }: ClaimProps) {
+  const [isAutoTagging, setIsAutoTagging] = useState(false);
   const handleTagClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -18,7 +21,20 @@ export default function ClaimComponent({ claim, isSelected, onClick, onTagClick 
       onTagClick(claim.tag);
     }
   };
-  ;
+  const handleAutoTag = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsAutoTagging(true);
+    try {
+      const { tag } = await autoTagClaim(claim.id);
+      if (onTagUpdate) {
+        onTagUpdate(claim.id, tag);
+      }
+    } catch (error) {
+      console.error('Error auto-tagging claim:', error);
+    } finally {
+      setIsAutoTagging(false);
+    }
+  };
   return (
     <div
       className={`${styles.container} ${isSelected ? styles.selected : ''}`}
@@ -35,15 +51,25 @@ export default function ClaimComponent({ claim, isSelected, onClick, onTagClick 
           {claim.content}
         </p>
         {claim.tag && (
-          <button
-            className={styles.tag}
-            onClick={handleTagClick}
-            aria-label={`Navigate to ${claim.tag} inbox`}
-            title={`Go to ${claim.tag} inbox`}
-          >
-            {claim.tag}
-          </button>
+            <button
+              className={styles.tag}
+              onClick={handleTagClick}
+              aria-label={`Navigate to ${claim.tag} inbox`}
+              title={`Go to ${claim.tag} inbox`}
+            >
+              {claim.tag}
+            </button>
+            
         )}
+        <button
+              className={styles.autoTagButton}
+              onClick={handleAutoTag}
+              disabled={isAutoTagging}
+              aria-label="Auto-tag claim"
+              title="Auto-tag claim"
+            >
+              {isAutoTagging ? 'Tagging...' : 'Auto-tag'}
+        </button>
       </div>
     </div>
   );

@@ -35,3 +35,8 @@ export async function setClaimTag(claimId: number, tag: string): Promise<void> {
     WHERE id = ${claimId}
   `);
 }
+
+export async function getClaimById(id: number): Promise<Claim | null> {
+  const result = await db.query<Claim>(SQL`SELECT * FROM claims WHERE id = ${id}`);
+  return result.rows[0] ?? null;
+}
